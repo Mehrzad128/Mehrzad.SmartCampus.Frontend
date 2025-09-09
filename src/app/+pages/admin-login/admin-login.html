@@ -1,0 +1,60 @@
+<div class="container">
+  <mat-card class="example-card" appearance="outlined">
+    <img
+      mat-card-image
+      src="assets/images/simple-and-minimalis.png"
+      alt="Photo of a Shiba Inu"
+    />
+    <mat-card-content class="content">
+        <div>
+          <mat-form-field [hideRequiredMarker]="true" appearance="outline" class="input">
+            <mat-label>Email address</mat-label>
+            <input
+              placeholder="name@domain.com"
+              matInput
+              [formControl]="email"
+              required
+              />
+             @if (email.hasError('email') && ! email.hasError('required')) {
+            <mat-error> This email is invalid </mat-error>
+            }@if (email.hasError('required')) {
+                  <mat-error> Email is required </mat-error>
+            }
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field [hideRequiredMarker]="true" appearance="outline" class="input">
+            <mat-label>Password</mat-label>
+            <input
+              matInput
+              [formControl]="password"
+              minlength="4"
+              [type]="hide() ? 'password' : 'text'"
+              required
+            />
+            <button
+              matIconButton
+              matSuffix
+              (click)="clickEvent($event)"
+              [attr.aria-label]="'Hide password'"
+              [attr.aria-pressed]="hide()"
+            >
+              <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+            @if (password.hasError('required')) {
+            <mat-error> Password is required </mat-error>
+            } @if (password.hasError('minlength')) {
+            <mat-error> Password must contain min 4 characters </mat-error>
+            }
+          </mat-form-field>
+        </div>
+      <mat-card-actions class="actions">
+        <button class="button" matButton="filled" (click)="Submit()">Submit</button>
+        <div  class="signUp">
+            <p>Don't have an account?</p>
+            <button matButton >Sign Up</button>
+        </div>
+      </mat-card-actions>
+    </mat-card-content>
+  </mat-card>
+</div>
