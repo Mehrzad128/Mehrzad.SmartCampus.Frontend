@@ -1,4 +1,6 @@
 .container{
+    background: #005CBB;
+    background: radial-gradient(circle, rgba(0, 92, 187, 1) 100%, rgba(142, 193, 245, 1) 0%);
     height: 100vh;
     display: flex;
     justify-content: center;
@@ -29,4 +31,10 @@
  display: flex;
  align-items: center;
  margin: auto;
+}
+
+.errorMessage{
+    color: #ba1a1a; 
+    margin: auto; 
+    margin-bottom: 0.5rem
 }

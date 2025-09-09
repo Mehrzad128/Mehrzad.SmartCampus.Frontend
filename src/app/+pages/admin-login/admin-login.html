@@ -1,38 +1,39 @@
 <div class="container">
   <mat-card class="example-card" appearance="outlined">
-    <img
-      mat-card-image
-      src="assets/images/simple-and-minimalis.png"
-      alt="Photo of a Shiba Inu"
-    />
+    <img mat-card-image src="assets/images/simple-and-minimalis.png" alt="Photo of a Shiba Inu" />
     <mat-card-content class="content">
+      @if (!requiresMfa) {
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
         <div>
-          <mat-form-field [hideRequiredMarker]="true" appearance="outline" class="input">
+          <mat-form-field [hideRequiredMarker]="true" appearance="outline" class="input"  subscriptSizing="dynamic">
             <mat-label>Email address</mat-label>
             <input
+              type="email"
               placeholder="name@domain.com"
               matInput
-              [formControl]="email"
+              formControlName="email"
               required
-              />
-             @if (email.hasError('email') && ! email.hasError('required')) {
+            />
+            @if (loginForm.controls.email.hasError('email') && !
+            loginForm.controls.email.hasError('required')) {
             <mat-error> This email is invalid </mat-error>
-            }@if (email.hasError('required')) {
-                  <mat-error> Email is required </mat-error>
+            }@if (loginForm.controls.email.hasError('required')) {
+            <mat-error> Email is required </mat-error>
             }
           </mat-form-field>
         </div>
         <div>
-          <mat-form-field [hideRequiredMarker]="true" appearance="outline" class="input">
+          <mat-form-field [hideRequiredMarker]="true" appearance="outline" class="input"  subscriptSizing="dynamic">
             <mat-label>Password</mat-label>
             <input
               matInput
-              [formControl]="password"
+              formControlName="password"
               minlength="4"
               [type]="hide() ? 'password' : 'text'"
               required
             />
             <button
+              type="button"
               matIconButton
               matSuffix
               (click)="clickEvent($event)"
@@ -41,20 +42,52 @@
             >
               <mat-icon>{{ hide() ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-            @if (password.hasError('required')) {
+            @if (loginForm.controls.password.hasError('required')) {
             <mat-error> Password is required </mat-error>
-            } @if (password.hasError('minlength')) {
+            } @if (loginForm.controls.password.hasError('minlength')) {
             <mat-error> Password must contain min 4 characters </mat-error>
             }
           </mat-form-field>
         </div>
-      <mat-card-actions class="actions">
-        <button class="button" matButton="filled" (click)="Submit()">Submit</button>
-        <div  class="signUp">
+        <mat-card-actions class="actions">
+          <div class="errorMessage">{{ errorMessage }}</div>
+          <button matButton="filled" class="button" type="submit" [disabled]="loading">
+            Verify
+          </button>
+          @if (!errorMessage) {
+          <div class="signUp">
             <p>Don't have an account?</p>
-            <button matButton >Sign Up</button>
-        </div>
-      </mat-card-actions>
+            <button matButton>Sign Up</button>
+          </div>
+          } @if (loading) {
+          <mat-progress-bar mode="buffer"></mat-progress-bar>
+          }
+        </mat-card-actions>
+      </form>
+      } @else {
+        <h4 style="color: #005CBB ;">
+            Inter the sent code to {{emailForMfa}} :
+        </h4>
+      <form [formGroup]="mfaForm" (ngSubmit)="verifyMfa()">
+        <mat-form-field appearance="outline" class="input" subscriptSizing="dynamic">
+          <mat-label>MFA Code</mat-label>
+          <input
+            type="text"
+            formControlName="otp"
+            placeholder="Enter the code that is sent via email"
+            matInput
+          />
+        </mat-form-field>
+        <mat-card-actions class="actions">
+            @if (errorMessage) {
+            <div class="errorMessage">{{ errorMessage }}</div>
+            }
+          <button type="submit" matButton="filled" class="button" [disabled]="loading">
+            Verify
+          </button>
+        </mat-card-actions>
+      </form>
+      }
     </mat-card-content>
   </mat-card>
 </div>

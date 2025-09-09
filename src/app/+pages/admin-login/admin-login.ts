@@ -1,11 +1,13 @@
 import { Component, ElementRef, inject, signal } from '@angular/core';
-import { Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { Validators, ReactiveFormsModule, FormControl, FormBuilder } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { MatProgressBar } from '@angular/material/progress-bar';
 @Component({
   selector: 'app-login',
   imports: [
@@ -15,17 +17,32 @@ import { MatCardModule } from '@angular/material/card';
     MatIconModule,
     MatButtonModule,
     MatCardModule,
+    MatProgressBar,
   ],
   templateUrl: './admin-login.html',
   styleUrl: './admin-login.scss',
 })
 export class AdminLogin {
-  constructor(private el: ElementRef) {}
-
-  readonly email = new FormControl('', [Validators.email]);
-  readonly password = new FormControl('', []);
-
   protected readonly value = signal('');
+
+  fb = inject(FormBuilder);
+  http = inject(HttpClient);
+  router = inject(Router);
+
+  errorMessage = '';
+  loading = false;
+  requiresMfa = false;
+  emailForMfa = '';
+
+  loginForm = this.fb.group({
+    email: ['', [Validators.email]],
+    password: [''],
+  });
+
+  mfaForm = this.fb.group({
+    otp: [''],
+  });
+
   protected onInput(event: Event) {
     this.value.set((event.target as HTMLInputElement).value);
   }
@@ -37,11 +54,65 @@ export class AdminLogin {
     event.stopPropagation();
   }
 
-  Submit() {
-    if (!this.email.invalid && !this.password.invalid) {
-      console.log('GG');
-    } else {
-      console.log('bad');
+  login() {
+    if (this.loginForm.invalid) return;
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.http.post<any>('https://localhost:7184/login', this.loginForm.value).subscribe({
+      next: (res) => {
+        if (res.requiresMfa) {
+          // Step 1 complete, now show MFA form
+          this.requiresMfa = true;
+          this.emailForMfa = this.loginForm.value.email!;
+          this.loading = false;
+        } else {
+          this.handleLoginResponse(res);
+        }
+      },
+      error: (err) => {
+        console.log(err.status)
+        if (err.status === 401) {
+          this.errorMessage = 'Invalid email or password';
+        } else if (err.status === 403) {
+          this.errorMessage = 'You are not authorized as an admin';
+        } else {
+          this.errorMessage = 'Login failed. Please try again.';
+        }
+
+        this.loading = false;
+      },
+    });
+  }
+
+  verifyMfa() {
+    if (this.mfaForm.invalid) return;
+    this.loading = true;
+    this.errorMessage = '';
+
+    const payload = {
+      email: this.emailForMfa,
+      otp: this.mfaForm.value.otp,
+    };
+
+    this.http.post<any>('https://localhost:7184/verify-mfa', payload).subscribe({
+      next: (res) => this.handleLoginResponse(res),
+      error: () => {
+        this.errorMessage = 'Invalid or expired code';
+        this.loading = false;
+      },
+    });
+  }
+
+  private handleLoginResponse(res: any) {
+    if (!res.token) {
+      this.errorMessage = 'Access denied. Admins only.';
+      this.loading = false;
+      return;
     }
+
+    localStorage.setItem('token', res.token);
+    localStorage.setItem('role', res.role);
+    this.router.navigate(['/admin/dashboard']);
   }
 }
