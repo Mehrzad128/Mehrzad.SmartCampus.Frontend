@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatProgressBar } from '@angular/material/progress-bar';
+import { AdminAuthService, LoginResponse } from '../../+services/admin-auth-service/admin-auth-service';
 @Component({
   selector: 'app-login',
   imports: [
@@ -26,7 +27,7 @@ export class AdminLogin {
   protected readonly value = signal('');
 
   fb = inject(FormBuilder);
-  http = inject(HttpClient);
+  auth = inject(AdminAuthService);
   router = inject(Router);
 
   errorMessage = '';
@@ -59,7 +60,8 @@ export class AdminLogin {
     this.loading = true;
     this.errorMessage = '';
 
-    this.http.post<any>('https://localhost:7184/login', this.loginForm.value).subscribe({
+    const { email, password } = this.loginForm.value;
+    this.auth.login(email!, password!).subscribe({
       next: (res) => {
         if (res.requiresMfa) {
           // Step 1 complete, now show MFA form
@@ -71,7 +73,6 @@ export class AdminLogin {
         }
       },
       error: (err) => {
-        console.log(err.status)
         if (err.status === 401) {
           this.errorMessage = 'Invalid email or password';
         } else if (err.status === 403) {
@@ -95,7 +96,7 @@ export class AdminLogin {
       otp: this.mfaForm.value.otp,
     };
 
-    this.http.post<any>('https://localhost:7184/verify-mfa', payload).subscribe({
+    this.auth.verifyMfa(this.emailForMfa, this.mfaForm.value.otp!).subscribe({
       next: (res) => this.handleLoginResponse(res),
       error: () => {
         this.errorMessage = 'Invalid or expired code';
@@ -104,8 +105,8 @@ export class AdminLogin {
     });
   }
 
-  private handleLoginResponse(res: any) {
-    if (!res.token) {
+  private handleLoginResponse(res: LoginResponse) {
+    if (!res.token || res.role!='Admin' ) {
       this.errorMessage = 'Access denied. Admins only.';
       this.loading = false;
       return;
