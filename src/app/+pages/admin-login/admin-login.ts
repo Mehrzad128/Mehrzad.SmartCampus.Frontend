@@ -73,14 +73,6 @@ export class AdminLogin {
         }
       },
       error: (err) => {
-        if (err.status === 401) {
-          this.errorMessage = 'Invalid email or password';
-        } else if (err.status === 403) {
-          this.errorMessage = 'You are not authorized as an admin';
-        } else {
-          this.errorMessage = 'Login failed. Please try again.';
-        }
-
         this.loading = false;
       },
     });
