@@ -1,11 +1,10 @@
-import { Component, ElementRef, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Validators, ReactiveFormsModule, FormControl, FormBuilder } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { AdminAuthService, LoginResponse } from '../../+services/admin-auth-service/admin-auth-service';
@@ -26,9 +25,9 @@ import { AdminAuthService, LoginResponse } from '../../+services/admin-auth-serv
 export class AdminLogin {
   protected readonly value = signal('');
 
-  fb = inject(FormBuilder);
-  auth = inject(AdminAuthService);
-  router = inject(Router);
+  private fb = inject(FormBuilder);
+  private auth = inject(AdminAuthService);
+  private router = inject(Router);
 
   errorMessage = '';
   loading = false;
@@ -99,7 +98,7 @@ export class AdminLogin {
 
   private handleLoginResponse(res: LoginResponse) {
     if (!res.token || res.role!='Admin' ) {
-      this.errorMessage = 'Access denied. Admins only.';
+      this.errorMessage = 'Access denied. Admins only';
       this.loading = false;
       return;
     }
