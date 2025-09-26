@@ -7,7 +7,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { Router } from '@angular/router';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { AdminAuthService, LoginResponse } from '../../+services/admin-auth-service/admin-auth-service';
+import { AdminAuthService, LoginResponse } from '../../../+services/admin-auth-service/admin-auth-service';
+
 @Component({
   selector: 'app-login',
   imports: [
