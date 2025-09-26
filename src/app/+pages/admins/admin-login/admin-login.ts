@@ -104,8 +104,8 @@ export class AdminLogin {
       return;
     }
 
-    localStorage.setItem('token', res.token);
-    localStorage.setItem('role', res.role);
-    this.router.navigate(['/admin/dashboard']);
+    sessionStorage.setItem('token', res.token);
+    sessionStorage.setItem('role', res.role);
+    this.router.navigate(['/admins/dashboard']);
   }
 }
