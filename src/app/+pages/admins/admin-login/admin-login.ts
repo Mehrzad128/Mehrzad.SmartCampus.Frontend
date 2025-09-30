@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { Validators, ReactiveFormsModule, FormControl, FormBuilder } from '@angular/forms';
+import { Validators, ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
@@ -33,7 +33,7 @@ export class AdminLogin {
   errorMessage = '';
   loading = false;
   requiresMfa = false;
-  emailForMfa = '';
+  emailFormMfa = '';
 
   loginForm = this.fb.group({
     email: ['', [Validators.email]],
@@ -66,7 +66,7 @@ export class AdminLogin {
         if (res.requiresMfa) {
           // Step 1 complete, now show MFA form
           this.requiresMfa = true;
-          this.emailForMfa = this.loginForm.value.email!;
+          this.emailFormMfa = this.loginForm.value.email!;
           this.loading = false;
         } else {
           this.handleLoginResponse(res);
@@ -84,11 +84,11 @@ export class AdminLogin {
     this.errorMessage = '';
 
     const payload = {
-      email: this.emailForMfa,
+      email: this.emailFormMfa,
       otp: this.mfaForm.value.otp,
     };
 
-    this.auth.verifyMfa(this.emailForMfa, this.mfaForm.value.otp!).subscribe({
+    this.auth.verifyMfa(this.emailFormMfa, this.mfaForm.value.otp!).subscribe({
       next: (res) => this.handleLoginResponse(res),
       error: () => {
         this.errorMessage = 'Invalid or expired code';

@@ -1,5 +1,5 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #drawer class="sidenav" fixedInViewport
+  <mat-sidenav color="primary" #drawer class="sidenav" fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
@@ -23,6 +23,6 @@
       }
       <span>Mehrzad.SmartCampus.Frontend</span>
     </mat-toolbar>
-    <!-- Add Content Here -->
+    <router-outlet/>
   </mat-sidenav-content>
 </mat-sidenav-container>

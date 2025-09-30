@@ -1,0 +1,40 @@
+.container{
+    background: #005CBB;
+    background: radial-gradient(circle, rgba(0, 92, 187, 1) 100%, rgba(142, 193, 245, 1) 0%);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.input{
+    width: 324px;
+    margin-bottom: 0.5rem;
+}
+ img{
+    margin: 2rem 0;
+ }
+.example-card {
+  max-width: 460px;
+}
+.content{
+    margin: 12px auto auto auto;
+}
+.actions{
+    display: flex;
+    flex-wrap: wrap;
+}
+.button{
+    width: 100%;
+}
+
+.signUp{
+ display: flex;
+ align-items: center;
+ margin: auto;
+}
+
+.errorMessage{
+    color: #ba1a1a; 
+    margin: auto; 
+    margin-bottom: 0.5rem
+}
