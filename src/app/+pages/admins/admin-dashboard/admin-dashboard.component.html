@@ -15,9 +15,7 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
-              <mat-radio-group
-                [(ngModel)]="ChoosenEntity"
-              >
+              <mat-radio-group [(ngModel)]="ChoosenEntity">
                 @for (item of entities; track item) {
                 <mat-radio-button class="entity-radio-button" [value]="item">{{
                   item
@@ -30,8 +28,18 @@
         <mat-divider></mat-divider>
         <mat-card-content class="dashboard-card-content">
           <div class="entity-stats">
-            <p>Active {{ ChoosenEntity }} : xxxx </p>
-            <p> Totall {{ ChoosenEntity }} : xxxx</p>
+            <p>Active {{ ChoosenEntity }} : xxxx</p>
+            <p>Totall {{ ChoosenEntity }} : xxxx</p>
+          </div>
+          <div class="chart-container">
+            <canvas
+              baseChart
+              [data]="barChartData"
+              [labels]="barChartLabels"
+              [options]="barChartOptions"
+              [type]="'bar'"
+            >
+            </canvas>
           </div>
         </mat-card-content>
       </mat-card>
