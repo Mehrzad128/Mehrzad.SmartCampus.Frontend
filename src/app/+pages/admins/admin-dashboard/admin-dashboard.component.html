@@ -1,26 +1,41 @@
 <div class="grid-container">
-  <h1 class="mat-h1">Dashboard</h1>
   <mat-grid-list cols="2" rowHeight="350px">
-    @for (card of cards | async; track card) {
-      <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
-        <mat-card class="dashboard-card">
-          <mat-card-header>
-            <mat-card-title>
-              {{card.title}}
-              <button matIconButton class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu" xPosition="before">
-                <button mat-menu-item>Expand</button>
-                <button mat-menu-item>Remove</button>
-              </mat-menu>
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="dashboard-card-content">
-            <div>Card Content Here</div>
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
+    @for (card of cards | async; track card.title) {
+    <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
+      <mat-card class="dashboard-card">
+        <mat-card-header class="dashboard-card-header">
+          <mat-card-title>
+            {{ card.title }}
+            <button
+              matIconButton
+              class="more-button"
+              [matMenuTriggerFor]="menu"
+              aria-label="Toggle menu"
+            >
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before">
+              <mat-radio-group
+                [(ngModel)]="ChoosenEntity"
+              >
+                @for (item of entities; track item) {
+                <mat-radio-button class="entity-radio-button" [value]="item">{{
+                  item
+                }}</mat-radio-button>
+                }
+              </mat-radio-group>
+            </mat-menu>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+        <mat-card-content class="dashboard-card-content">
+          <div class="entity-stats">
+            <p>Active {{ ChoosenEntity }} : xxxx </p>
+            <p> Totall {{ ChoosenEntity }} : xxxx</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
     }
   </mat-grid-list>
 </div>

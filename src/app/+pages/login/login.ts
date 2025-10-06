@@ -51,8 +51,13 @@ export class Login {
     this.backend.login(email!, password!).subscribe({
       next: (res) => {
         this.loading = false;
-        if (!res.token || res.role == 'Admin' || !res.role) {
+        if (!res.token || !res.role) {
           this.errorMessage = 'Access denied';
+          this.loading = false;
+          return;
+        }
+        if (res.role == 'Admin'){
+          this.errorMessage = 'Login via adminLogin page';
           this.loading = false;
           return;
         }

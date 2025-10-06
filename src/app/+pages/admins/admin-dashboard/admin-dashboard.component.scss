@@ -10,6 +10,10 @@
   bottom: 15px;
 }
 
+.dashboard-card-header {
+  margin-bottom: 0.5rem;
+}
+
 .more-button {
   position: absolute;
   top: 5px;
@@ -17,5 +21,15 @@
 }
 
 .dashboard-card-content {
-  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.entity-radio-button {
+  display: block;
+  width: 100%;
+}
+
+.entity-stats {
+  display: flex;
+  gap: 2rem ;
 }

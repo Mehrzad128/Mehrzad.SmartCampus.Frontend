@@ -4,6 +4,7 @@
 
 .sidenav {
   width: 200px;
+  border-right: 1px solid #c4c6d0;
 }
 
 .sidenav .mat-toolbar {
@@ -14,4 +15,7 @@
   position: sticky;
   top: 0;
   z-index: 1;
+  background: #005CBB;
+  background: radial-gradient(circle, rgba(0, 92, 187, 1) 100%, rgba(142, 193, 245, 1) 0%); 
+  color: white;
 }
